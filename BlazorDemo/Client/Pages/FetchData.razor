@@ -1,0 +1,64 @@
+@page "/fetchdata"
+@page "/fetchdata/{Id:int}"
+@using BlazorDemo.Shared
+@inject HttpClient Http
+<h1>@State.Counter</h1>
+<h1>Weather forecast</h1>
+<p>@Id</p>
+<p>This component demonstrates fetching data from the server.</p>
+<LoaderComponent IsLoading="IsLoading">
+  <Loading>
+    <p><em>Loading...</em></p>
+  </Loading>
+  <Content>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Temp. (C)</th>
+          <th>Temp. (F)</th>
+          <th>Summary</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var forecast in forecasts)
+        {
+          <tr>
+            <td>@forecast.Date.ToShortDateString()</td>
+            <td>@forecast.TemperatureC</td>
+            <td>@forecast.TemperatureF</td>
+            <td>@forecast.Summary</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </Content>
+</LoaderComponent>
+
+@if (forecasts == null)
+{
+ 
+}
+else
+{
+  
+}
+
+@code {
+    [CascadingParameter]
+    public UserProvider State { get; set; }
+    public bool IsLoading { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    private WeatherForecast[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+      IsLoading = true;
+      await Task.Delay(5000);
+      forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+      IsLoading = false;
+      StateHasChanged();
+    }
+
+}

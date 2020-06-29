@@ -1,0 +1,14 @@
+﻿<div class="card">
+  <div class="card-header">
+    <p class="card-title">@User.Name</p>
+  </div>
+  <div class="card-body">
+     @foreach (var car in User.Cars)
+     {
+        <p>@car.Make</p>
+     }
+  </div>
+  <div class="card-footer">
+     <button class="btn btn-danger" @onclick="(() => Delete(User))">Delete</button>
+  </div>
+</div>
